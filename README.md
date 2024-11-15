@@ -1,11 +1,11 @@
-Setup steps- 
+Setup steps:
 
-Backend 
+Backend:
 
 docker-compose up --build -d
 
 
-Frontend
+Frontend:
 
 npm install
 
