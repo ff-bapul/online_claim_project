@@ -1,0 +1,38 @@
+/* src/App.css */
+
+/* Ensure the body and html elements stretch to the full height of the viewport */
+html, body {
+  height: 100%; /* Ensure the full height is taken up */
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f0f2f5;
+}
+
+/* Apply flexbox to the root element to make it fill the screen */
+#root {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Full viewport height */
+}
+
+/* The content area (main) will take the available space */
+main {
+  flex-grow: 1; /* This ensures the main content area grows to fill remaining space */
+}
+
+/* Footer styles to position it at the bottom of the page */
+footer {
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 15px;
+  width: 100%;
+  position: relative;
+  bottom: 0;
+  margin-top: 400px !important;
+}
+
+.footer {
+  margin-top: 400px !important;
+}

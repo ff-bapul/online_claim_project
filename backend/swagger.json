@@ -1,0 +1,341 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Claim Submission System API",
+    "version": "1.0.0",
+    "description": "API documentation for the Online Claim Submission System"
+  },
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "summary": "Register a new user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string" },
+                  "email": { "type": "string" },
+                  "password": { "type": "string" }
+                },
+                "required": ["username", "email", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "User registered successfully" },
+          "400": { "description": "Error registering user" }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Login a user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string" },
+                  "password": { "type": "string" }
+                },
+                "required": ["email", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "description": "Invalid credentials" },
+          "500": { "description": "Error logging in user" }
+        }
+      }
+    },
+    "/claims/create": {
+      "post": {
+        "summary": "Create a new claim request",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "vehicleInfo": {
+                    "type": "object",
+                    "properties": {
+                      "make": { "type": "string" },
+                      "model": { "type": "string" },
+                      "year": { "type": "integer" }
+                    },
+                    "required": ["make", "model", "year"]
+                  }
+                },
+                "required": ["vehicleInfo"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Claim created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" },
+                    "claim": {
+                      "type": "object",
+                      "properties": {
+                        "vehicleInfo": {
+                          "type": "object",
+                          "properties": {
+                            "make": { "type": "string" },
+                            "model": { "type": "string" },
+                            "year": { "type": "integer" }
+                          }
+                        },
+                        "status": { "type": "string" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": { "description": "Error creating claim" }
+        }
+      }
+    },
+    "/claims": {
+      "get": {
+        "summary": "Get all claims for the logged-in user",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Claims fetched successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "vehicleInfo": {
+                        "type": "object",
+                        "properties": {
+                          "make": { "type": "string" },
+                          "model": { "type": "string" },
+                          "year": { "type": "integer" }
+                        }
+                      },
+                      "status": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": { "description": "Error fetching claims" }
+        }
+      }
+    },
+    "/claims/{id}": {
+      "put": {
+        "summary": "Update an existing claim",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Claim ID to update",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "vehicleInfo": {
+                    "type": "object",
+                    "properties": {
+                      "make": { "type": "string" },
+                      "model": { "type": "string" },
+                      "year": { "type": "integer" }
+                    }
+                  }
+                },
+                "required": ["vehicleInfo"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Claim updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" },
+                    "claim": {
+                      "type": "object",
+                      "properties": {
+                        "vehicleInfo": {
+                          "type": "object",
+                          "properties": {
+                            "make": { "type": "string" },
+                            "model": { "type": "string" },
+                            "year": { "type": "integer" }
+                          }
+                        },
+                        "status": { "type": "string" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": { "description": "Claim not found" },
+          "500": { "description": "Error updating claim" }
+        }
+      },
+      "delete": {
+        "summary": "Delete an existing claim",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Claim ID to delete",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Claim deleted successfully" },
+          "404": { "description": "Claim not found" },
+          "500": { "description": "Error deleting claim" }
+        }
+      }
+    },
+    "/claims/{id}/status": {
+      "get": {
+        "summary": "Check the status of a claim",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Claim ID to check status",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Claim status fetched successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "404": { "description": "Claim not found" },
+          "500": { "description": "Error fetching claim status" }
+        }
+      }
+    },
+    "/claims/{id}/appeal": {
+      "post": {
+        "summary": "Appeal a rejected claim",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Claim ID to appeal",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Claim appealed successfully" },
+          "404": { "description": "Claim not found or not rejected" },
+          "500": { "description": "Error appealing claim" }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
